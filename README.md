@@ -1,7 +1,8 @@
 # MedicationTask
 
 ##  Overview
-A SwiftUI app that allows users to search for medications using RxNorm, save them locally with Realm, and track them.
+A SwiftUI app that allows users to search for medications using RxNorm, save and remove them locally with Realm, and track them.
+Moreover, user can set reminder to take medition.
 
 ##  Features Covered
 - Firebase email auth
@@ -11,9 +12,8 @@ A SwiftUI app that allows users to search for medications using RxNorm, save the
 - Unit tests (ViewModel + Repository)
 - Coordinator + Dependency Injection
 
-##  Bonus
-- Accessibility support
-- List animations
+##  Additional Functionality
+- Signout Functionality 
 - Calendar event reminders
 
 ##  Technical
@@ -23,5 +23,13 @@ A SwiftUI app that allows users to search for medications using RxNorm, save the
 - Native frameworks only (no 3rd party)
 - SPM
 
+## Optional:
+- Medication Reminders with Calendar Integration
+- Usage Tracking / History
+- Recent or Frequent Searches
+- Local Notifications
+- Doctor Info or Prescription Notes
+
 ## Video
-/Users/shubham/Desktop/Screen Recording 2025-04-23 at 12.16.20 PM.mov
+
+https://drive.google.com/file/d/1-WgNYyYuzd7zoJjZkLVMP28rtWH0dHKs/view?usp=sharing
