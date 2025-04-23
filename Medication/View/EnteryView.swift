@@ -12,8 +12,10 @@ struct EntryView: View {
     @StateObject private var viewModel = AuthenticationViewModel()
     @State private var isCheckingAuth = true
     @State private var goToMedication = true
-    @State private var delayDone = false
 
+    var storedEmail: String {
+        return UserDefaults.standard.string(forKey: "userEmail") ?? ""
+    }
     
     var body: some View {
         NavigationStack {
@@ -28,21 +30,14 @@ struct EntryView: View {
                 
             }
         }
-        .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                delayDone = true
-                goToMedication = true
-            }
-        }
+        
         .fullScreenCover(isPresented: $goToMedication) {
-            if viewModel.isLoggedIn {
+            if storedEmail != ""  {
                    MedicationsView()
                        .transition(.identity)
-               } else if delayDone {
-                   ContentView()
-               } else {
-                   EmptyView() // Prevent flicker before delay
-               }
+            } else {
+                ContentView()
+            }
             
         }
         .navigationBarBackButtonHidden()

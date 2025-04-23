@@ -26,10 +26,10 @@ struct MedicationDetailView: View {
                     Circle()
                         .fill(Color.orange.opacity(0.3))
                         .frame(width: 80, height: 80)
-                    Image(systemName: "pills.fill")
+                    Image("icnTray")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 36, height: 36)
+                        .frame(width: 80, height: 80)
                         .foregroundColor(.black)
                 }
                 Text(drug.name)

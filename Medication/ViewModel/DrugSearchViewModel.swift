@@ -15,26 +15,30 @@ class DrugSearchViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
     
+    var userEmail: String {
+        return UserDefaults.standard.string(forKey: "userEmail") ?? ""
+    }
+    
     var onComplete: (() -> Void)? = nil
-
     
 
+    
     private var cancellables = Set<AnyCancellable>()
-
+    
     func searchDrug() {
         guard !searchText.isEmpty else { return }
-
+        
         let query = searchText.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
         let urlString = "https://rxnav.nlm.nih.gov/REST/drugs.json?name=\(query)&expand=psn"
-
+        
         guard let url = URL(string: urlString) else {
             errorMessage = "Invalid URL"
             return
         }
-
+        
         isLoading = true
         errorMessage = nil
-
+        
         URLSession.shared.dataTaskPublisher(for: url)
             .map(\.data)
             .decode(type: RxDrugResponse.self, decoder: JSONDecoder())
@@ -56,26 +60,27 @@ class DrugSearchViewModel: ObservableObject {
     }
     
     func saveToRealm(drug: RxConceptProperty) {
-          let realm = try! Realm()
+        let realm = try! Realm()
         
         // Check if the rxcui already exists in the database
-          if let existingMedication = realm.objects(MedicationEntity.self).filter("rxcui == %@", drug.rxcui).first {
-              // If medication already exists, show a Toast message
-              showToast(message: "Medication with rxcui \(drug.rxcui) already exists in the database.")
-              return
-          }
-          
-          let medication = MedicationEntity()
-            medication.rxcui = drug.rxcui
-          medication.name = drug.name
-          medication.synonym = drug.synonym ?? ""
-          medication.psn = drug.psn ?? ""
+        if let existingMedication = realm.objects(MedicationEntity.self).filter("rxcui == %@ AND userEmail == %@", drug.rxcui, userEmail).first {
+            // If medication already exists, show a Toast message
+            showToast(message: "Medication with rxcui \(drug.rxcui) already exists in the database.")
+            return
+        }
+        
+        let medication = MedicationEntity()
+        medication.rxcui = drug.rxcui
+        medication.name = drug.name
+        medication.synonym = drug.synonym ?? ""
+        medication.psn = drug.psn ?? ""
         medication.tty = drug.tty
-
-          try! realm.write {
-              realm.add(medication, update: .modified)
-          }
-
+        medication.userEmail = userEmail
+        
+        try! realm.write {
+            realm.add(medication, update: .modified)
+        }
+        
         self.onComplete?()
-      }
+    }
 }

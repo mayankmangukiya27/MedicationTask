@@ -15,6 +15,8 @@ class MedicationEntity: Object, Identifiable {
     @Persisted var synonym: String = ""
     @Persisted var psn: String = ""
     @Persisted var tty: String = ""
+    @Persisted var userEmail: String = ""
+    
 }
 
 extension MedicationEntity {

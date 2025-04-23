@@ -64,11 +64,11 @@ struct MedicationsView: View {
                                             .fill(Color(red: 1.0, green: 0.89, blue: 0.74))
                                             .frame(width: 40, height: 40)
                                         
-                                        Image(systemName: "pills.fill")
+                                        Image("icnTray")
                                             .resizable()
                                             .scaledToFit()
                                             .foregroundColor(.black)
-                                            .frame(width: 20, height: 20)
+                                            .frame(width: 40, height: 40)
                                     }
                                     
                                     Text("\(viewModel.medications[index].rxcui) || \(viewModel.medications[index].name)")

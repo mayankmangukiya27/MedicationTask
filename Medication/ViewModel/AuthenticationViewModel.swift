@@ -44,10 +44,16 @@ class FirebaseAuthService: AuthService {
 
 
 class AuthenticationViewModel: ObservableObject {
-    @Published var email = ""
+    @Published var email = "" {
+        didSet {
+            // Store the email globally whenever it's updated
+            UserDefaults.standard.set(email, forKey: "userEmail")
+        }
+    }
     @Published var password = ""
     @Published var isLoggedIn = false
     @Published var errorMessage: String?
+    
     
     var loginComplete: ((String) -> Void)? = nil
     var signoutComplete: (() -> Void)? = nil
@@ -58,7 +64,11 @@ class AuthenticationViewModel: ObservableObject {
     //Dependency injection initializer
     init(authService: AuthService = FirebaseAuthService()) {
            self.authService = authService
-           
+      
+        if let storedEmail = UserDefaults.standard.string(forKey: "userEmail") {
+                  self.email = storedEmail
+              }
+        
            Auth.auth().addStateDidChangeListener { [weak self] _, user in
                DispatchQueue.main.async {
                    if let user = user {
@@ -106,6 +116,7 @@ class AuthenticationViewModel: ObservableObject {
             try Auth.auth().signOut()
             self.isLoggedIn = false
             print("Logged out")
+            UserDefaults.standard.set("", forKey: "userEmail")
             self.signoutComplete?()
         } catch {
             self.errorMessage = error.localizedDescription
